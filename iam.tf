@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "deploy" {
     ]
   }
 
-   statement {
+  statement {
     effect = "Allow"
     actions = [
       "iam:GetPolicy",
