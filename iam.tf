@@ -25,7 +25,7 @@ data "aws_iam_policy_document" "oidc" {
 
     condition {
       test     = "StringLike"
-      values   = ["repo:LavenderLemonade/terraform-actions"]
+      values   = ["repo:LavenderLemonade/terraform-actions:*"]
       variable = "token.actions.githubusercontent.com:sub"
     }
   }
