@@ -62,7 +62,7 @@ data "aws_iam_policy_document" "deploy" {
       "dynamodb:DeleteItem",
       "dynamodb:UpdateItem"
     ]
-    resources = ["arn:aws:dynamodb:us-east-1:182399724218:table/terraform-state-locking"]
+    resources = ["arn:aws:dynamodb:us-east-1:182399724218:table/terra-gitactions--state-locking"]
   }
 
   statement {
