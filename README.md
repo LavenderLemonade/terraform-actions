@@ -10,4 +10,4 @@ From there I'm going to have the following set up to happen when GitHub Actions 
 
 - Lint the code 
 - Plan the Terraform changes
-- Require manual approva
+- Require manual approval
