@@ -5,7 +5,7 @@ resource "aws_iam_openid_connect_provider" "this" {
     "sts.amazonaws.com",
   ]
 
-  thumbprint_list = ["ffffffffffffffffffffffffffffffffffffffff"]
+  thumbprint_list = ["ffffffffffffffffffffffffffffffffffffffff"] # Replace with actual thumbprint
 }
 
 data "aws_iam_policy_document" "oidc" {
@@ -36,18 +36,26 @@ resource "aws_iam_role" "this" {
   assume_role_policy = data.aws_iam_policy_document.oidc.json
 }
 
-data "aws_iam_policy_document" "deploy" {
-  # S3 backend access
+data "aws_iam_policy_document" "additional_permissions" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRoleWithWebIdentity"
+    ]
+    resources = ["*"]
+  }
+
   statement {
     effect = "Allow"
     actions = [
       "s3:GetObject",
-      "s3:GetBucketCors",
       "s3:PutObject",
       "s3:DeleteObject",
       "s3:ListBucket",
       "s3:GetBucketPolicy",
-      "s3:GetBucketAcl"
+      "s3:GetBucketAcl",
+      "s3:GetBucketCORS",
+      "s3:GetBucketWebsite"
     ]
     resources = [
       "arn:aws:s3:::sammy-terra-gitactions-state",
@@ -55,15 +63,14 @@ data "aws_iam_policy_document" "deploy" {
     ]
   }
 
-  # DynamoDB backend access
   statement {
     effect = "Allow"
     actions = [
-      "dynamodb:DescribeTable",
       "dynamodb:GetItem",
       "dynamodb:PutItem",
       "dynamodb:DeleteItem",
       "dynamodb:UpdateItem",
+      "dynamodb:DescribeTable",
       "dynamodb:DescribeContinuousBackups",
       "dynamodb:DescribeTimeToLive",
       "dynamodb:ListTagsOfResource"
@@ -73,48 +80,39 @@ data "aws_iam_policy_document" "deploy" {
     ]
   }
 
-  # IAM read-only permissions
   statement {
     effect = "Allow"
     actions = [
-      "iam:GetPolicy",
-      "iam:GetPolicyVersion",
-      "iam:GetRole",
-      "iam:GetOpenIDConnectProvider",
-      "iam:ListRolePolicies",
-      "iam:ListAttachedRolePolicies"
+      "iam:Get*",
+      "iam:List*",
+      "iam:PassRole"
     ]
     resources = ["*"]
   }
 
-  # EC2 Describe permissions
   statement {
     effect = "Allow"
     actions = [
-      "ec2:DescribeVpcs",
-      "ec2:DescribeInstanceAttribute",
-      "ec2:DescribeSubnets",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeInternetGateways",
-      "ec2:DescribeRouteTables",
-      "ec2:DescribeVpcAttribute",
-      "ec2:DescribeInstances",
-      "ec2:DescribeInstanceTypes",
-      "ec2:DescribeTags"
+      "ec2:DescribeVolumes",
+      "ec2:DescribeTags",
+      "ec2:DescribeInstanceAttribute"
     ]
     resources = ["*"]
   }
 }
 
-
-
-resource "aws_iam_policy" "deploy" {
-  name        = "ci-deploy-policy"
-  description = "Policy used for deployments on CI"
-  policy      = data.aws_iam_policy_document.deploy.json
+resource "aws_iam_policy" "ci_custom_policy" {
+  name        = "ci-custom-policy"
+  description = "Custom policy for CI/CD Terraform pipelines"
+  policy      = data.aws_iam_policy_document.additional_permissions.json
 }
 
-resource "aws_iam_role_policy_attachment" "attach-deploy" {
+resource "aws_iam_role_policy_attachment" "power_user_attach" {
   role       = aws_iam_role.this.name
-  policy_arn = aws_iam_policy.deploy.arn
+  policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "ci_custom_attach" {
+  role       = aws_iam_role.this.name
+  policy_arn = aws_iam_policy.ci_custom_policy.arn
 }
