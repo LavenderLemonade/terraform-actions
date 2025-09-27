@@ -37,13 +37,15 @@ resource "aws_iam_role" "this" {
 }
 
 data "aws_iam_policy_document" "deploy" {
+  # S3 backend access
   statement {
     effect = "Allow"
     actions = [
       "s3:GetObject",
       "s3:PutObject",
       "s3:DeleteObject",
-      "s3:ListBucket"
+      "s3:ListBucket",
+      "s3:GetBucketPolicy"
     ]
     resources = [
       "arn:aws:s3:::sammy-terra-gitactions-state",
@@ -51,7 +53,7 @@ data "aws_iam_policy_document" "deploy" {
     ]
   }
 
-  # (Optional) DynamoDB locking
+  # DynamoDB backend access
   statement {
     effect = "Allow"
     actions = [
@@ -60,25 +62,28 @@ data "aws_iam_policy_document" "deploy" {
       "dynamodb:PutItem",
       "dynamodb:DeleteItem",
       "dynamodb:UpdateItem",
-      "dynamodb:DescribeContinuousBackups"
+      "dynamodb:DescribeContinuousBackups",
+      "dynamodb:DescribeTimeToLive"
     ]
-    resources = ["arn:aws:dynamodb:us-east-1:182399724218:table/terra-gitactions--state-locking"]
+    resources = [
+      "arn:aws:dynamodb:us-east-1:182399724218:table/terra-gitactions--state-locking"
+    ]
   }
 
+  # IAM read-only permissions
   statement {
     effect = "Allow"
     actions = [
       "iam:GetPolicy",
       "iam:GetPolicyVersion",
-      "iam:GetOpenIDConnectProvider",
       "iam:GetRole",
-      "iam:GetOpenIDConnectProvider"
+      "iam:GetOpenIDConnectProvider",
+      "iam:ListRolePolicies"
     ]
-    resources = [
-      "*"
-    ]
+    resources = ["*"]
   }
 
+  # EC2 Describe permissions
   statement {
     effect = "Allow"
     actions = [
@@ -86,12 +91,15 @@ data "aws_iam_policy_document" "deploy" {
       "ec2:DescribeSubnets",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeInternetGateways",
+      "ec2:DescribeRouteTables",
       "ec2:DescribeVpcAttribute",
-      "ec2:DescribeInstances"
+      "ec2:DescribeInstances",
+      "ec2:DescribeInstanceTypes"
     ]
     resources = ["*"]
   }
 }
+
 
 resource "aws_iam_policy" "deploy" {
   name        = "ci-deploy-policy"
