@@ -38,7 +38,7 @@ resource "aws_iam_role" "this" {
 
 data "aws_iam_policy_document" "deploy" {
   statement {
-    effect  = "Allow"
+    effect = "Allow"
     actions = [
       "ecr:*",
     ]

@@ -1,11 +1,11 @@
 terraform {
-    backend "s3" {
-     bucket         = "sammy-terra-gitactions-state"
-     key            = "terra-git-actions/terraform.tfstate"
-     region         = "us-east-1"
-     dynamodb_table = "terraform-state-locking"
-     encrypt        = true
-   }
+  backend "s3" {
+    bucket         = "sammy-terra-gitactions-state"
+    key            = "terra-git-actions/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-state-locking"
+    encrypt        = true
+  }
 
   required_providers {
     aws = {
@@ -34,7 +34,7 @@ resource "aws_s3_bucket_versioning" "terraform_bucket_versioning" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "terraform_state_crypto_conf" {
-  bucket        = aws_s3_bucket.terraform_state_gitactions_sammy.bucket 
+  bucket = aws_s3_bucket.terraform_state_gitactions_sammy.bucket
   rule {
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"

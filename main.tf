@@ -1,18 +1,18 @@
 resource "aws_vpc" "terra-git-vpc" {
   cidr_block = "10.0.0.0/16"
 
-  tags = { Name = "terraform-git-actions-vpc" 
+  tags = { Name = "terraform-git-actions-vpc"
   }
 }
 
-resource "aws_subnet" "public-subnet"{
-    vpc_id = aws_vpc.terra-git-vpc.id
-    cidr_block = "10.0.1.0/24"
-    map_public_ip_on_launch = true
+resource "aws_subnet" "public-subnet" {
+  vpc_id                  = aws_vpc.terra-git-vpc.id
+  cidr_block              = "10.0.1.0/24"
+  map_public_ip_on_launch = true
 
-    tags = {
-        Name = "Public Subnet for Git Actions Project"
-    }
+  tags = {
+    Name = "Public Subnet for Git Actions Project"
+  }
 }
 
 resource "aws_internet_gateway" "pub-sub-gw" {
