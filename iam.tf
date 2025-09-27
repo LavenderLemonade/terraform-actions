@@ -42,6 +42,7 @@ data "aws_iam_policy_document" "deploy" {
     effect = "Allow"
     actions = [
       "s3:GetObject",
+      "s3:GetBucketCors",
       "s3:PutObject",
       "s3:DeleteObject",
       "s3:ListBucket",
@@ -91,6 +92,7 @@ data "aws_iam_policy_document" "deploy" {
     effect = "Allow"
     actions = [
       "ec2:DescribeVpcs",
+      "ec2:DescribeInstanceAttribute",
       "ec2:DescribeSubnets",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeInternetGateways",
