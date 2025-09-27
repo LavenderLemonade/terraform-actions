@@ -63,8 +63,29 @@ data "aws_iam_policy_document" "deploy" {
       "dynamodb:UpdateItem"
     ]
     resources = [
-      "arn:aws:dynamodb:us-east-1:182399724218:table/terraform-state-locking"
+      "${aws_dynamodb_table.terraform_locks.arn}/*"
     ]
+  }
+
+   statement {
+    effect = "Allow"
+    actions = [
+      "iam:GetPolicy",
+      "iam:GetOpenIDConnectProvider"
+    ]
+    resources = [
+      "*"
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:DescribeVpcs",
+      "ec2:DescribeSubnets",
+      "ec2:DescribeSecurityGroups"
+    ]
+    resources = ["*"]
   }
 }
 
