@@ -3,7 +3,7 @@ terraform {
     bucket         = "sammy-terra-gitactions-state"
     key            = "terra-git-actions/terraform.tfstate"
     region         = "us-east-1"
-    dynamodb_table = "terraform-state-locking"
+    dynamodb_table = "terra-gitactions--state-locking"
     encrypt        = true
   }
 
