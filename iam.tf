@@ -39,10 +39,32 @@ resource "aws_iam_role" "this" {
 data "aws_iam_policy_document" "deploy" {
   statement {
     effect = "Allow"
-    actions = [
+     actions = [
       "ecr:*",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "s3:ListBucket"
     ]
-    resources = ["*"]
+    resources = [
+      "arn:aws:s3:::sammy-terra-gitactions-state",
+      "arn:aws:s3:::sammy-terra-gitactions-state/*"
+    ]
+  }
+
+  # (Optional) DynamoDB locking
+  statement {
+    effect = "Allow"
+    actions = [
+      "dynamodb:DescribeTable",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+      "dynamodb:UpdateItem"
+    ]
+    resources = [
+      "arn:aws:dynamodb:us-east-1:182399724218:table/terraform-state-locking"
+    ]
   }
 }
 
