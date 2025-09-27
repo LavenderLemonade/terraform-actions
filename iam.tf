@@ -39,7 +39,7 @@ resource "aws_iam_role" "this" {
 data "aws_iam_policy_document" "deploy" {
   statement {
     effect = "Allow"
-     actions = [
+    actions = [
       "ecr:*",
       "s3:GetObject",
       "s3:PutObject",
