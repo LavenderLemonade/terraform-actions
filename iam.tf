@@ -45,7 +45,8 @@ data "aws_iam_policy_document" "deploy" {
       "s3:PutObject",
       "s3:DeleteObject",
       "s3:ListBucket",
-      "s3:GetBucketPolicy"
+      "s3:GetBucketPolicy",
+      "s3:GetBucketAcl"
     ]
     resources = [
       "arn:aws:s3:::sammy-terra-gitactions-state",
@@ -63,7 +64,8 @@ data "aws_iam_policy_document" "deploy" {
       "dynamodb:DeleteItem",
       "dynamodb:UpdateItem",
       "dynamodb:DescribeContinuousBackups",
-      "dynamodb:DescribeTimeToLive"
+      "dynamodb:DescribeTimeToLive",
+      "dynamodb:ListTagsOfResource"
     ]
     resources = [
       "arn:aws:dynamodb:us-east-1:182399724218:table/terra-gitactions--state-locking"
@@ -78,7 +80,8 @@ data "aws_iam_policy_document" "deploy" {
       "iam:GetPolicyVersion",
       "iam:GetRole",
       "iam:GetOpenIDConnectProvider",
-      "iam:ListRolePolicies"
+      "iam:ListRolePolicies",
+      "iam:ListAttachedRolePolicies"
     ]
     resources = ["*"]
   }
@@ -94,11 +97,13 @@ data "aws_iam_policy_document" "deploy" {
       "ec2:DescribeRouteTables",
       "ec2:DescribeVpcAttribute",
       "ec2:DescribeInstances",
-      "ec2:DescribeInstanceTypes"
+      "ec2:DescribeInstanceTypes",
+      "ec2:DescribeTags"
     ]
     resources = ["*"]
   }
 }
+
 
 
 resource "aws_iam_policy" "deploy" {
