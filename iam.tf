@@ -69,6 +69,8 @@ data "aws_iam_policy_document" "deploy" {
     effect = "Allow"
     actions = [
       "iam:GetPolicy",
+      "iam:GetOpenIDConnectProvider",
+      "iam:GetRole",
       "iam:GetOpenIDConnectProvider"
     ]
     resources = [
@@ -81,7 +83,8 @@ data "aws_iam_policy_document" "deploy" {
     actions = [
       "ec2:DescribeVpcs",
       "ec2:DescribeSubnets",
-      "ec2:DescribeSecurityGroups"
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeVpcAttribute"
     ]
     resources = ["*"]
   }
