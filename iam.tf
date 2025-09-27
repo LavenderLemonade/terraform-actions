@@ -40,7 +40,6 @@ data "aws_iam_policy_document" "deploy" {
   statement {
     effect = "Allow"
     actions = [
-      "ecr:*",
       "s3:GetObject",
       "s3:PutObject",
       "s3:DeleteObject",
@@ -60,7 +59,8 @@ data "aws_iam_policy_document" "deploy" {
       "dynamodb:GetItem",
       "dynamodb:PutItem",
       "dynamodb:DeleteItem",
-      "dynamodb:UpdateItem"
+      "dynamodb:UpdateItem",
+      "dynamodb:DescribeContinuousBackups"
     ]
     resources = ["arn:aws:dynamodb:us-east-1:182399724218:table/terra-gitactions--state-locking"]
   }
@@ -69,6 +69,7 @@ data "aws_iam_policy_document" "deploy" {
     effect = "Allow"
     actions = [
       "iam:GetPolicy",
+      "iam:GetPolicyVersion",
       "iam:GetOpenIDConnectProvider",
       "iam:GetRole",
       "iam:GetOpenIDConnectProvider"
@@ -84,7 +85,9 @@ data "aws_iam_policy_document" "deploy" {
       "ec2:DescribeVpcs",
       "ec2:DescribeSubnets",
       "ec2:DescribeSecurityGroups",
-      "ec2:DescribeVpcAttribute"
+      "ec2:DescribeInternetGateways",
+      "ec2:DescribeVpcAttribute",
+      "ec2:DescribeInstances"
     ]
     resources = ["*"]
   }
